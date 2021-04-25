@@ -21,4 +21,8 @@
         </activity>
     </application>
 
+    <!-- EMail SMTP 보내기 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+
 </manifest>
