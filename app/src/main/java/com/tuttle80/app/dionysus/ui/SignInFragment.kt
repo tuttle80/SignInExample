@@ -15,6 +15,8 @@ import androidx.appcompat.widget.AppCompatTextView
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import com.tuttle80.app.dionysus.R
+import com.tuttle80.app.dionysus.db.UserDatabase
+import com.tuttle80.app.dionysus.db.UserEntity
 import java.util.regex.Pattern
 
 
@@ -91,18 +93,7 @@ class SignInFragment : Fragment() {
         countDownTimerText = root.findViewById<AppCompatTextView>(R.id.CountDownTimer)
 
         root.findViewById<AppCompatButton>(R.id.checkVerified).setOnClickListener {
-            val insertCode =  root.findViewById<AppCompatEditText>(R.id.verifyCodeText).text.toString()
-            if (verifiedCode.compareTo(insertCode) == 0) {
-                Toast.makeText(context, "Verified OK", Toast.LENGTH_LONG).show()
-                validateTimer.cancel(); // 시간 정지
-
-                // DB에 기록
-
-                // 인증 된것에 대한 화면은 Notify 전달되면 수정
-            }
-            else {
-                Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show()
-            }
+            checkVerifiedOnClick()
         }
 
         return root
@@ -112,7 +103,6 @@ class SignInFragment : Fragment() {
         val email = view?.findViewById<AppCompatEditText>(R.id.emailText)?.text
         email?.let {
             sendEmailTo(it.toString())
-            //sendEmail(it.toString())
 
             // Start timer
             validateTimer.cancel(); // 종료 시키고
@@ -139,4 +129,41 @@ class SignInFragment : Fragment() {
         context?.startActivity(email)
     }
 
+    private fun checkVerifiedOnClick() {
+        val insertCode =  view?.findViewById<AppCompatEditText>(R.id.verifyCodeText)?.text.toString()
+        if (verifiedCode.compareTo(insertCode) == 0) {
+            Toast.makeText(context, "Verified OK", Toast.LENGTH_LONG).show()
+            validateTimer.cancel(); // 시간 정지
+            validateTimer.onFinish();
+
+            val emailAddress = view?.findViewById<AppCompatEditText>(R.id.emailText)?.text.toString()
+
+            /* 새로운 객체를 생성, id 이외의 값을 지정 후 DB에 추가 */
+            val addRunnable = Runnable {
+                val newUser = UserEntity()
+                newUser.verifiedType = "email"
+                newUser.dateTime = System.currentTimeMillis()
+                newUser.email = emailAddress
+
+                var userDatabase = UserDatabase.getInstance(requireContext())
+                userDatabase?.userDao()?.insert(newUser)
+
+//                val list = userDatabase?.userDao()?.getAll()
+//                list?.let {
+//                    for (user in list) {
+//                        Log.d("BugFix", "Check : " + user.id + " / " + user.verifiedType + " / " + user.dateTime + " / " + user.email)
+//                    }
+//                }
+            }
+
+            // DB에 기록
+            val addThread = Thread(addRunnable)
+            addThread.start()
+
+            // 인증 된것에 대한 화면은 Notify 전달되면 수정
+        }
+        else {
+            Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show()
+        }
+    }
 }
