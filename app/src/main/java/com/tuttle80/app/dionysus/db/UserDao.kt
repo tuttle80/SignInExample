@@ -1,22 +1,34 @@
 package com.tuttle80.app.dionysus.db
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy.REPLACE
 import androidx.room.Query
 
+
 @Dao
 interface UserDao {
 
 
-    @Query("SELECT * FROM UserEntity")
-    fun getAll(): List<UserEntity>
+    @Query("SELECT COUNT(*) FROM UserEntity")
+    fun getCount(): LiveData<Int>
 
     @Insert(onConflict = REPLACE)
     fun insert(user: UserEntity)
 
     @Query("DELETE from UserEntity")
     fun deleteAll()
+
+
+//    @Query("SELECT * FROM " + StudentEntry.TABLE_NAME)
+//    fun getAllStudents(): LiveData<List<PhStudentEntity?>?>?
+
+//    @Dao
+//    interface PhStudentDao {
+//        @get:Query("SELECT * FROM " + StudentEntry.TABLE_NAME)
+//        val allStudents: List<Any?>?
+//    }
 
 
 //

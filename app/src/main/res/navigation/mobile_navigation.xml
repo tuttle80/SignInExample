@@ -12,7 +12,10 @@
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_navigation_home_to_navigation_signin"
-            app:destination="@id/navigation_signin" />
+            app:destination="@id/navigation_signin"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out"
+            />
     </fragment>
 
     <fragment

@@ -18,6 +18,7 @@
         />
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/verificationLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/back_button"
@@ -102,6 +103,33 @@
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/verificationOKLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintStart_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:text="인증완료"
+            />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/signOut"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:text="로그아웃"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 
 

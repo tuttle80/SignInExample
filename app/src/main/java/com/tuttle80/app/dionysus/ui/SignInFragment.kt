@@ -3,28 +3,32 @@ package com.tuttle80.app.dionysus.ui
 import android.content.Intent
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatButton
-import androidx.appcompat.widget.AppCompatEditText
-import androidx.appcompat.widget.AppCompatImageButton
-import androidx.appcompat.widget.AppCompatTextView
+import androidx.appcompat.widget.*
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import com.tuttle80.app.dionysus.R
 import com.tuttle80.app.dionysus.db.UserDatabase
 import com.tuttle80.app.dionysus.db.UserEntity
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 
 class SignInFragment : Fragment() {
 
+    // ViewModel
+    private lateinit var signInViewModel: SignInViewModel
+
     // Member
     private val validateTimer = ValidateTimer(3 * 60000, 1000)  // 3분간 기다림
-
     private var verifiedCode = "12345678"
 
 
@@ -55,21 +59,38 @@ class SignInFragment : Fragment() {
         }
     }
 
+    // ViewModel 통지 받고 화며 갱신
+    var accountCountObserver = Observer<Int> { count ->
+        view?.let { view ->
+            if (0 < count) {
+                view.findViewById<ConstraintLayout>(R.id.verificationOKLayout).visibility = View.VISIBLE
+                view.findViewById<LinearLayoutCompat>(R.id.verificationLayout).visibility = View.GONE
+            }
+            else {
+                view.findViewById<ConstraintLayout>(R.id.verificationOKLayout).visibility = View.GONE
+                view.findViewById<LinearLayoutCompat>(R.id.verificationLayout).visibility = View.VISIBLE
+            }
+        }
+    };
 
-    // ------------------------------------------------------------------------
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//
+//        val inflater = TransitionInflater.from(requireContext())
+//        exitTransition = inflater.inflateTransition(R.anim.fragment_open_exit)
+//    }
+
     override fun onCreateView(
             inflater: LayoutInflater,
             container: ViewGroup?,
             savedInstanceState: Bundle?
     ): View? {
-//        notificationsViewModel =
-//                ViewModelProvider(this).get(OptionViewModel::class.java)
-        val root = inflater.inflate(R.layout.fragment_signin, container, false)
-//        val textView: TextView = root.findViewById(R.id.text_notifications)
-//        notificationsViewModel.text.observe(viewLifecycleOwner, Observer {
-//            textView.text = it
-//        })
+        // ViewModel
+        signInViewModel = ViewModelProvider(this).get(SignInViewModel::class.java)
+        signInViewModel.getCount(requireContext()).observe(viewLifecycleOwner, accountCountObserver)
 
+        // Layout
+        val root = inflater.inflate(R.layout.fragment_signin, container, false)
 
         // Back button
         root.findViewById<AppCompatImageButton>(R.id.back_button).setOnClickListener {
@@ -85,7 +106,7 @@ class SignInFragment : Fragment() {
         root.findViewById<AppCompatEditText>(R.id.emailText).addTextChangedListener { text ->
             // EMail 정규식을 보고 버튼 활성화를 결정한다.
             val pattern = "\\w+@\\w+\\.\\w+(\\.\\w+)?" // email 정규식
-            val regex: Boolean = Pattern.matches(pattern, text)
+            val regex: Boolean = Pattern.matches(pattern, text.toString())
 
             sendEmailButton.isEnabled = regex
         }
@@ -94,6 +115,14 @@ class SignInFragment : Fragment() {
 
         root.findViewById<AppCompatButton>(R.id.checkVerified).setOnClickListener {
             checkVerifiedOnClick()
+        }
+
+        root.findViewById<AppCompatButton>(R.id.signOut).setOnClickListener {
+            CoroutineScope(IO).launch {
+                // 모두 지우기
+                var userDatabase = UserDatabase.getInstance(requireContext())
+                userDatabase?.userDao()?.deleteAll()
+            }.start()
         }
 
         return root
@@ -139,7 +168,7 @@ class SignInFragment : Fragment() {
             val emailAddress = view?.findViewById<AppCompatEditText>(R.id.emailText)?.text.toString()
 
             /* 새로운 객체를 생성, id 이외의 값을 지정 후 DB에 추가 */
-            val addRunnable = Runnable {
+            CoroutineScope(IO).launch {
                 val newUser = UserEntity()
                 newUser.verifiedType = "email"
                 newUser.dateTime = System.currentTimeMillis()
@@ -147,20 +176,7 @@ class SignInFragment : Fragment() {
 
                 var userDatabase = UserDatabase.getInstance(requireContext())
                 userDatabase?.userDao()?.insert(newUser)
-
-//                val list = userDatabase?.userDao()?.getAll()
-//                list?.let {
-//                    for (user in list) {
-//                        Log.d("BugFix", "Check : " + user.id + " / " + user.verifiedType + " / " + user.dateTime + " / " + user.email)
-//                    }
-//                }
-            }
-
-            // DB에 기록
-            val addThread = Thread(addRunnable)
-            addThread.start()
-
-            // 인증 된것에 대한 화면은 Notify 전달되면 수정
+            }.start()
         }
         else {
             Toast.makeText(context, "Fail", Toast.LENGTH_LONG).show()
