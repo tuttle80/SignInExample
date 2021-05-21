@@ -1,10 +1,10 @@
-package com.tuttle80.app.dionysus.ui.dashboard
+package com.tuttle80.app.dionysus.ui.newFerment
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class DashboardViewModel : ViewModel() {
+class NewFermentFragmentViewModel : ViewModel() {
 
     private val _text = MutableLiveData<String>().apply {
         value = "This is dashboard Fragment"

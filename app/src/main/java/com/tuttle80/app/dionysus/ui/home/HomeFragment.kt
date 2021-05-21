@@ -53,6 +53,10 @@ class HomeFragment : Fragment() {
             Navigation.findNavController(root).navigate(R.id.action_navigation_home_to_navigation_signin)
         }
 
+        root.findViewById<AppCompatImageButton>(R.id.newFerment).setOnClickListener {
+            Navigation.findNavController(root).navigate(R.id.action_navigation_home_to_navigation_newFerment)
+        }
+
         simpleRecyclerView = root.findViewById<RecyclerView>(R.id.simpleRecycleList)
         simpleRecyclerView.adapter = HomeListAdapter(requireContext(), simpleList)
         simpleRecyclerView.layoutManager = LinearLayoutManager(requireContext())

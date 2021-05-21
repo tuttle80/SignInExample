@@ -1,28 +1,27 @@
-package com.tuttle80.app.dionysus.ui.home
+package com.tuttle80.app.dionysus.ui.newFerment
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.AppCompatTextView
 import androidx.recyclerview.widget.RecyclerView
 import com.tuttle80.app.dionysus.R
 
 
-class HomeListAdapter(val context: Context, val mList: ArrayList<HomeListSimpleData>) :
-    RecyclerView.Adapter<HomeListAdapter.CustomViewHolder>() {
+class NewFermentPhotoAdapter(val context: Context, val mList: ArrayList<NewFermentPhotoData>) :
+    RecyclerView.Adapter<NewFermentPhotoAdapter.CustomViewHolder>() {
 
     inner class CustomViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        protected var title = view.findViewById<AppCompatTextView>(R.id.title)
+    //    protected var title = view.findViewById<AppCompatTextView>(R.id.title)
 
-        fun bind(simpleData: HomeListSimpleData) {
-            title.text = simpleData.title
+        fun bind(simpleData: NewFermentPhotoData) {
+           // title.text = simpleData.title
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CustomViewHolder {
         val layoutView = LayoutInflater.from(context)
-            .inflate(R.layout.recycler_item_homelist, parent, false)
+            .inflate(R.layout.recycler_item_new_photo, parent, false)
 
         return CustomViewHolder(layoutView)
     }

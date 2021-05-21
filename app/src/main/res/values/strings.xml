@@ -6,6 +6,7 @@
 
 
     <string name="sign_in">Sign In</string>
+    <string name="newFerment">새로 만들기</string>
 
     <string name="send">보내기</string>
     <string name="resend">다시 보내기</string>

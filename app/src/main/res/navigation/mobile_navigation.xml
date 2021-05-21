@@ -16,13 +16,18 @@
             app:enterAnim="@android:anim/fade_in"
             app:exitAnim="@android:anim/fade_out"
             />
+        <action
+            android:id="@+id/action_navigation_home_to_navigation_newFerment"
+            app:destination="@id/navigation_newFerment"
+            app:enterAnim="@android:anim/fade_in"
+            app:exitAnim="@android:anim/fade_out" />
     </fragment>
 
     <fragment
         android:id="@+id/navigation_dashboard"
-        android:name="com.tuttle80.app.dionysus.ui.dashboard.DashboardFragment"
+        android:name="com.tuttle80.app.dionysus.ui.newFerment.NewFermentFragment"
         android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        tools:layout="@layout/fragment_new_ferment" />
 
     <fragment
         android:id="@+id/navigation_notifications"
@@ -40,10 +45,13 @@
         android:id="@+id/navigation_signin"
         android:name="com.tuttle80.app.dionysus.ui.SignInFragment"
         android:label="Sign In"
-        tools:layout="@layout/fragment_signin" >
-        <action
-            android:id="@+id/action_navigation_signin_to_navigation_home"
-            app:destination="@id/navigation_home" />
+        tools:layout="@layout/fragment_signin" />
+
+    <fragment
+        android:id="@+id/navigation_newFerment"
+        android:name="com.tuttle80.app.dionysus.ui.newFerment.NewFermentFragment"
+        android:label="새로 만들기"
+        tools:layout="@layout/fragment_new_ferment">
     </fragment>
 
 
