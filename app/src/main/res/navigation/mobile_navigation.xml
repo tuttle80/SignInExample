@@ -43,9 +43,19 @@
 
     <fragment
         android:id="@+id/navigation_signin"
-        android:name="com.tuttle80.app.dionysus.ui.SignInFragment"
+        android:name="com.tuttle80.app.dionysus.ui.account.SignInFragment"
         android:label="Sign In"
-        tools:layout="@layout/fragment_signin" />
+        tools:layout="@layout/fragment_signin" >
+        <action
+            android:id="@+id/action_navigation_signin_to_navigation_signup"
+            app:destination="@id/navigation_signup" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_signup"
+        android:name="com.tuttle80.app.dionysus.ui.account.SignUpFragment"
+        android:label="Sign Up"
+        tools:layout="@layout/fragment_signup" />
 
     <fragment
         android:id="@+id/navigation_newFerment"

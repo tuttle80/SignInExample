@@ -1,4 +1,4 @@
-package com.tuttle80.app.dionysus.ui
+package com.tuttle80.app.dionysus.ui.account
 
 import android.content.Context
 import androidx.lifecycle.LiveData

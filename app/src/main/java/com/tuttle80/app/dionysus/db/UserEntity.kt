@@ -11,7 +11,8 @@ class UserEntity(
     @PrimaryKey(autoGenerate = true) var id: Long?,
     @ColumnInfo(name = "VerifiedType") var verifiedType: String?,
     @ColumnInfo(name = "DateTime") var dateTime: Long,
-    @ColumnInfo(name = "eMail") var email: String
+    @ColumnInfo(name = "EMail") var email: String,
+    @ColumnInfo(name = "Password") var password: String
 ){
-    constructor(): this(null,"", 0,"")
+    constructor(): this(null,"", 0,"", "")
 }

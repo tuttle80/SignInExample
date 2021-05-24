@@ -11,4 +11,7 @@
     <string name="send">보내기</string>
     <string name="resend">다시 보내기</string>
     <string name="ok">확인</string>
+
+    <string name="forgot_password">비밀번호 찾기</string>
+    <string name="sign_up">등록하기</string>
 </resources>

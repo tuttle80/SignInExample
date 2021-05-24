@@ -20,6 +20,10 @@ interface UserDao {
     @Query("DELETE from UserEntity")
     fun deleteAll()
 
+    @Query("SELECT COUNT(*) FROM UserEntity WHERE email LIKE (:email) AND password LIKE (:pwdMd5)")
+    fun isValidAccount(email: String, pwdMd5: String) : Int
+    //
+
 
 //    @Query("SELECT * FROM " + StudentEntry.TABLE_NAME)
 //    fun getAllStudents(): LiveData<List<PhStudentEntity?>?>?
