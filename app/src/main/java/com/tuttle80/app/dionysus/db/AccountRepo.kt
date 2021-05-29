@@ -22,6 +22,13 @@ class AccountRepo {
         userDatabase?.userDao()?.insert(newAccount)
     }
 
+    fun isExistAccount(context: Context, email: String) : Boolean {
+        var userDatabase = UserDatabase.getInstance(context)
+
+        val count = userDatabase?.userDao()?.isExistAccount(email) ?: 0
+        return count == 1
+    }
+
     fun isValidAccount(context: Context, email: String, password: String) : Boolean {
         // TestCse
 //            val newUser = UserEntity()

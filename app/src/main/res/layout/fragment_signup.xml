@@ -86,7 +86,8 @@
                 android:layout_weight="1"
                 android:hint="Enter your password"
                 android:layout_marginEnd="5dp"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:inputType="textPassword"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/checkPassword"
@@ -109,7 +110,8 @@
                 android:layout_weight="1"
                 android:hint="Enter your password"
                 android:layout_marginEnd="5dp"
-                android:maxLines="1"/>
+                android:maxLines="1"
+                android:inputType="textPassword"/>
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/checkPassword2"
@@ -119,6 +121,12 @@
                 android:src="@drawable/ic_check_svgrepo_com"
                 android:tint="@color/check_color_fail"/>
         </androidx.appcompat.widget.LinearLayoutCompat>
+
+        <androidx.appcompat.widget.AppCompatCheckBox
+            android:id="@+id/showPasswordChkBox"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="비밀번호 표시"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/submitButton"

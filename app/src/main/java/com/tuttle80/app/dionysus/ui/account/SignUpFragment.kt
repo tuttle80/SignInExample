@@ -3,6 +3,7 @@ package com.tuttle80.app.dionysus.ui.account
 import android.content.res.ColorStateList
 import androidx.lifecycle.ViewModelProvider
 import android.os.Bundle
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatButton
+import androidx.appcompat.widget.AppCompatCheckBox
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.core.widget.addTextChangedListener
@@ -19,14 +21,11 @@ import com.tuttle80.app.dionysus.R
 import com.tuttle80.app.dionysus.db.AccountRepo
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import java.util.regex.Pattern
 
 class SignUpFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = SignUpFragment()
-    }
 
     private lateinit var viewModel: SignUpViewModel
 
@@ -104,7 +103,9 @@ class SignUpFragment : Fragment() {
         editPassword2.addTextChangedListener { text ->
             // 상태에 따라 색상을 지정한다.
             val textLength = text?.length ?: 0
-            val color = if (4 <= textLength) {
+            val compare = editPassword.text != editPassword2.text
+
+            val color = if (4 <= textLength && compare) {
                 flagSubmit = flagSubmit or FLAG_CHECK_OK_PASSWORD2;
                 requireContext().getColor(R.color.check_color_ok)
             }
@@ -123,22 +124,44 @@ class SignUpFragment : Fragment() {
         checkImagePassword2 = rootView.findViewById(R.id.checkPassword2)
 
 
+        // 비밀번호 표시
+        rootView.findViewById<AppCompatCheckBox>(R.id.showPasswordChkBox).setOnCheckedChangeListener { _, isChecked ->
+            editPassword.transformationMethod = if (!isChecked) PasswordTransformationMethod() else null
+            editPassword.setSelection(editPassword.length())
+
+            editPassword2.transformationMethod = if (!isChecked) PasswordTransformationMethod() else null
+            editPassword2.setSelection(editPassword2.length())
+        }
+
         // 로그인 버튼
         rootView.findViewById<AppCompatButton>(R.id.submitButton).setOnClickListener {
-            if (flagSubmit != (FLAG_CHECK_OK_EMAIL or FLAG_CHECK_OK_PASSWORD)) {
+            if (flagSubmit != (FLAG_CHECK_OK_EMAIL or FLAG_CHECK_OK_PASSWORD or FLAG_CHECK_OK_PASSWORD2)) {
                 return@setOnClickListener
             }
 
-            if (editPassword.text != editPassword2.text) {
-                return@setOnClickListener
-            }
+//            if (editPassword.text != editPassword2.text) {
+//                return@setOnClickListener
+//            }
 
             /* 새로운 객체를 생성, id 이외의 값을 지정 후 DB에 추가 */
             CoroutineScope(Dispatchers.IO).launch {
                 val accountRepo = AccountRepo()
-                val ret = accountRepo.addAccount(requireContext(), editEmail.text.toString(), editPassword.text.toString())
+                val isExist = accountRepo.isExistAccount(requireContext(), editEmail.text.toString())
+                if (isExist) {
+                    Toast.makeText(requireContext(), "등록된 사용자 입니다.", Toast.LENGTH_LONG).show()
+                    return@launch
+                }
 
-                Log.d("BugFix", "Account Ret = " + ret)
+                accountRepo.addAccount(requireContext(), editEmail.text.toString(), editPassword.text.toString())
+
+
+                CoroutineScope(Dispatchers.Main).launch {
+
+
+                    Toast.makeText(requireContext(), "등록 되었습니다.", Toast.LENGTH_LONG).show()
+                    activity?.onBackPressed()
+                }
+
             }.start()
         }
 

@@ -22,6 +22,9 @@ interface UserDao {
 
     @Query("SELECT COUNT(*) FROM UserEntity WHERE email LIKE (:email) AND password LIKE (:pwdMd5)")
     fun isValidAccount(email: String, pwdMd5: String) : Int
+
+    @Query("SELECT COUNT(*) FROM UserEntity WHERE email LIKE (:email)")
+    fun isExistAccount(email: String) : Int
     //
 
 

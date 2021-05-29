@@ -9,6 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="sign_help_blue">#ff0050ff</color>
-    <color name="check_color_ok">@android:color/holo_green_dark</color>
+    <color name="check_color_ok">#FFFF5588</color>
     <color name="check_color_fail">#FFBBBBBB</color>
 </resources>

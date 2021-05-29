@@ -1,20 +1,17 @@
 package com.tuttle80.app.dionysus.ui.account
 
-import android.content.Context
-import android.content.Context.INPUT_METHOD_SERVICE
 import android.content.res.ColorStateList
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.InputType
+import android.text.method.PasswordTransformationMethod
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.view.View.OnFocusChangeListener
 import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.widget.*
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
@@ -204,6 +201,11 @@ class SignInFragment : Fragment() {
         checkImageEmail = rootView.findViewById(R.id.checkEmail)
         checkImagePassword = rootView.findViewById(R.id.checkPassword)
 
+        // 비밀번호 표시
+        rootView.findViewById<AppCompatCheckBox>(R.id.showPasswordChkBox).setOnCheckedChangeListener { _, isChecked ->
+            editPassword.transformationMethod = if (!isChecked) PasswordTransformationMethod() else null
+            editPassword.setSelection(editPassword.length())
+        }
 
         // 로그인 버튼
         rootView.findViewById<AppCompatButton>(R.id.submitButton).setOnClickListener {
@@ -218,7 +220,10 @@ class SignInFragment : Fragment() {
                 val accountRepo = AccountRepo()
                 val ret = accountRepo.isValidAccount(requireContext(), editEmail.text.toString(), editPassword.text.toString())
 
-                Log.d("BugFix", "Account Ret = " + ret)
+                if (!ret) {
+                    rootView.findViewById<AppCompatTextView>(R.id.signInMessage).text = requireContext().getText(R.string.error_sign_in_invalid_user)
+                }
+///                Log.d("BugFix", "Account Ret = " + ret)
             }.start()
         }
 

@@ -14,4 +14,6 @@
 
     <string name="forgot_password">비밀번호 찾기</string>
     <string name="sign_up">등록하기</string>
+
+    <string name="error_sign_in_invalid_user">등록된 메일주소가 없거나 비밀번호가 틀림</string>
 </resources>
